@@ -7,22 +7,29 @@ import Notification from '../Notification/Notification';
 import '../App/App.css';
 
 export function App() {
-  const [feedback, setFeedback] = useState({
-    good: 0,
-    neutral: 0,
-    bad: 0,
-  });
+  const [good, setGood] = useState(0);
+  const [neutral, setNeutral] = useState(0);
+  const [bad, setBad] = useState(0);
 
   const handleFeedback = type => {
-    setFeedback(prevFeedback => ({
-      ...prevFeedback,
-      [type]: prevFeedback[type] + 1,
-    }));
+    switch (type) {
+      case 'good':
+        setGood(good + 1);
+        break;
+      case 'neutral':
+        setNeutral(neutral + 1);
+        break;
+      case 'bad':
+        setBad(bad + 1);
+        break;
+      default:
+        break;
+    }
   };
 
-  const totalFeedback = feedback.good + feedback.neutral + feedback.bad;
+  const totalFeedback = good + neutral + bad;
   const positivePercentage =
-    totalFeedback > 0 ? (feedback.good / totalFeedback) * 100 : 0;
+    totalFeedback > 0 ? (good / totalFeedback) * 100 : 0;
 
   return (
     <div className="container">
@@ -33,21 +40,19 @@ export function App() {
         />
       </Section>
 
-      {totalFeedback > 0 ? (
-        <Section title="Statistics">
+      <Section title="Statistics">
+        {totalFeedback > 0 ? (
           <Statistics
-            good={feedback.good}
-            neutral={feedback.neutral}
-            bad={feedback.bad}
+            good={good}
+            neutral={neutral}
+            bad={bad}
             total={totalFeedback}
             positivePercentage={positivePercentage}
           />
-        </Section>
-      ) : (
-        <Section title="Statistics">
+        ) : (
           <Notification message="There is no feedback" />
-        </Section>
-      )}
+        )}
+      </Section>
     </div>
   );
 }
